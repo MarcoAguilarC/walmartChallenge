@@ -1,0 +1,89 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'info.solidsoft.pitest' version '1.15.0'
+    id 'jacoco'
+}
+
+group = 'com.logistics'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.25.0'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:5.12.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-provider-redis-spring:5.12.0'
+    implementation 'com.google.guava:guava:33.0.0-jre'
+    implementation 'org.springframework.retry:spring-retry'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    implementation('it.ozimov:embedded-redis:0.7.3') {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
+    
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                'com/logistics/delivery/infrastructure/adapters/rest/dto/**',
+                'com/logistics/delivery/infrastructure/adapters/rest/mapper/**',
+                'com/logistics/delivery/DeliveryApplication.class'
+            ])
+        }))
+    }
+}
+
+pitest {
+    targetClasses = ['com.logistics.delivery.domain.*', 'com.logistics.delivery.application.service.*']
+    excludedClasses = [
+        "com.logistics.delivery.infrastructure.adapters.rest.dto.*",
+        "com.logistics.delivery.infrastructure.adapters.rest.mapper.*Impl"
+    ]
+    junit5PluginVersion = '1.2.1'
+    outputFormats = ['HTML']
+    timestampedReports = false
+}

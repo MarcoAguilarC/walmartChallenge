@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/.idea
+/.vscode
+/backend/.idea
+/frontend/.vscode
+/frontend/dist
+/frontend/node_modules
+/frontend/public
+/backend/.gradle
+/Delivery Slots
+/backend/build

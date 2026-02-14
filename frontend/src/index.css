@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+    --color-walmart-blue: #0071CE;
+    --color-walmart-yellow: #FFC220;
+    --color-walmart-dark: #041E42;
+    --color-walmart-light: #F2F2F2;
+    --color-walmart-gray: #464748;
+}
+
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #ffffff;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+@layer base {
+    body {
+        @apply bg-gray-50;
+    }
+}
+
+.walmart-btn-primary {
+    @apply bg-walmart-blue text-white font-bold py-3 px-6 rounded-full transition-all hover:bg-walmart-blue/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.walmart-card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden;
+}
